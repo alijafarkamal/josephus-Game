@@ -1,0 +1,95 @@
+#include<iostream>
+#include"queue.h"
+using namespace std;
+void Queue_fill(Queue<int>& queue,int m,Queue<int>& temp[]){
+    j = 0;
+    while(j<m){
+        while (!(temp[j].getSize()==0)) {
+            int num = temp[j].getFront();
+            temp[j].dequeue();
+            queue.enqueue(num);
+        }
+        j++;
+    }
+}
+void Queue_emptier(Queue<int>& queue,int exponent,Queue<int>& temp[]){
+    while (!(queue.getSize()==0)) 
+    {
+        int num = queue.getFront();
+        queue.dequeue();
+        int rem = num / exponent;
+        rem %= 10;
+        temp[rem].enqueue(num);
+    }
+}
+template<typename T>
+void radix_sort(Queue<T>& queue, int k,int m){
+    Queue<T> temp[m]; 
+    int j = 0;
+    int exponent = 1;
+    while(k>=0){
+        k--;
+        Queue_emptier(queue,exponent,temp);
+        Queue_fill(queue,m,temp)
+        exponent*= m;
+    }
+}
+template<typename t>
+void print(Queue<t>& queue){
+    while(!queue.empty())
+    {
+        cout<<queue.getFront()<<" ";
+        queue.dequeue();
+    }
+    cout<<endl;
+}
+void radixSort(Queue<string>& queue, int k,int m){
+    Queue<string> temp[m]; //array of m queues
+    int j = 0;
+    int exponent = 1;
+    k--;
+    while(k>=0){   
+        k--;
+        while (!(queue.getSize()==0)) {
+            string num = queue.getFront();
+            if(k<num.size()){
+                temp[(int)num[k]].enqueue(num);
+            }
+            else temp[0].enqueue(num);
+            queue.dequeue();
+        }
+        j = 0;
+        while(j<m){
+            while (!(temp[j].getSize()==0)) {
+                string num = temp[j].getFront();
+                queue.enqueue(num);
+                temp[j].dequeue();  
+            }
+            j++;
+        }
+        exponent*= m;
+    }
+}
+int main(){
+    Queue<int> queue(7);
+    queue.enqueue(329);
+    queue.enqueue(7);
+    queue.enqueue(657);
+    queue.enqueue(39);
+    queue.enqueue(436);
+    queue.enqueue(20);
+    queue.enqueue(355);
+    int k= 3;
+    int m = 10;
+    radix_sort(queue,k,m);
+    k = 7;
+    m = 256;
+	print(queue);
+    Queue<string> q(3);
+    q.enqueue("easiest");
+    q.enqueue("biggest");
+    q.enqueue("tallest");
+    radixSort(q,k,m);
+    print(q);
+    return 0;
+}
